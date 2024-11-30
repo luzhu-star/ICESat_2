@@ -30,23 +30,18 @@ parser.add_argument('--target_rgt', type=int, help='Target reference ground trac
 parser.add_argument('--bbox_coords', type=str, help='Bounding box coordinates')
 args = parser.parse_args()
 
-
 target_date = args.target_date
 target_rgt = args.target_rgt
 bbox_coords = json.loads(args.bbox_coords)
 beam_types = ['strong', 'weak']
 track_nums = [1, 2, 3]
 
+# 打印调试信息，查看解析后的类型和内容
+print(f"Type of bbox_coords: {type(bbox_coords)}")
+print(f"Bounding box coordinates: {bbox_coords}")
 # Reformatting bounding box for query purposes
 start_time = time.time()
-coords_arr = np.array(bbox_coords[0]) 
-poly = []
-
-for point in coords_arr:
-    poly.append({
-        'lat': point[1],
-        'lon': point[0]
-    })
+poly = [{'lat': point[1], 'lon': point[0]} for point in bbox_coords]
 
 # sliderule parameters for querying photon data
 parms = {

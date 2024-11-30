@@ -3,6 +3,8 @@ import subprocess
 from io import StringIO
 import os
 import geopandas as gpd
+import numpy as np
+import json
 
 # Get the directory path where the current script is located
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +12,7 @@ output_directory = os.path.join(current_directory, 'Data')
 
 # Orbit data
 orbit_data = [
-   {"target_date": "2024-10-12", "target_rgt": "598"},# Replace with actual date and RGT
+   {"target_date": "2024-11-30", "target_rgt": "598"},# Replace with actual date and RGT
 
 ]
 
@@ -23,13 +25,12 @@ bbox_coords = [
     [105.0, 15.0],  # Bottom-right corner (longitude, latitude)
     [100.0, 15.0]   # Closing the loop back to the bottom-left corner
 ]
+bbox_coords_str = json.dumps(bbox_coords)
 df_listall = []
 for orbit in orbit_data:
     target_date = orbit["target_date"]
-    target_rgt = orbit["target_rgt"]
-    coords_arr = pd.np.array(bbox_coords)
-    poly = [{'lat': point[1], 'lon': point[0]} for point in coords_arr]
-    command = ["python", "icesat2_6_beams_fenguidao_jingjian_new.py", "--target_date=" + target_date, "--target_rgt=" + str(target_rgt), "--bbox_coords=" + str(poly)]
+    target_rgt = orbit["target_rgt"] 
+    command = ["python", "icesat2.py", "--target_date=" + target_date, "--target_rgt=" + str(target_rgt), "--bbox_coords=" +  bbox_coords_str]
     result = subprocess.run(command, capture_output=True, text=True)
 
     # Handle errors if any
